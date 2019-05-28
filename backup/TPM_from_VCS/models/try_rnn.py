@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[13]:
+# In[1]:
 
 
 import keras
@@ -17,14 +17,7 @@ from keras.layers import LSTM
 from keras.layers import RepeatVector
 
 
-# In[17]:
-
-
-import util.broadcast_vector as BV
-import util.tpm_from_vcs as get_TPM
-
-
-# In[18]:
+# In[2]:
 
 
 np.random.seed(23)
@@ -33,7 +26,40 @@ MAX_VC_DIM = 10
 HIDDEN_SIZE = 1024
 
 
-# In[19]:
+# In[16]:
+
+
+def get_vector(m, v):
+    a = np.zeros((MAX_NODES, MAX_VC_DIM))
+    
+#     print('Original Shape {}'.format(v.shape))
+#     print('New Shape {}'.format(a.shape))
+    
+    for i in range(0, v.shape[0]):
+        for j in range(0, v.shape[1]):
+            a[i, j] = v[i, j]
+    
+    
+#     print('DEBUG: Original Vector = {}'.format(v))
+#     print('DEBUG: Final Vector = {}'.format(a))
+
+    return a
+
+
+# In[4]:
+
+
+def generate_tpm_from_vcs(P):
+
+    U, s, V = np.linalg.svd(P)
+    S = np.zeros((U.shape[0], V.shape[0]))
+    S[:len(s), :len(s)] = np.diag(s)
+    
+    TC = np.dot(U, S)[:, [1, 2]] # extracting columnss 2 and 3
+    return TC
+
+
+# In[5]:
 
 
 def create_dataset(size):
@@ -48,14 +74,14 @@ def create_dataset(size):
         n = np.random.randint(low=m, high=100) 
         P = np.random.rand(n, m)
 
-        ans = get_TPM.generate_tpm_from_vcs(P)
+        ans = generate_tpm_from_vcs(P)
 
         if np.iscomplex(ans.flatten()).any():
             print("Is the TC matrix complex : {}".format(np.iscomplex(ans.flatten())))
         
         # broadcast the input vector into MAX_VC_DIM length
-        P = BV.get_vector(MAX_VC_DIM, P)
-        ans = BV.get_vector(MAX_VC_DIM, ans)
+        P = get_vector(MAX_VC_DIM, P)
+        ans = get_vector(MAX_VC_DIM, ans)
 
         # dataset[i] = (P.tolist(), ans.tolist())
 #         dataset.append((P, ans))
@@ -117,28 +143,22 @@ X.shape
 y.shape
 
 
-# In[24]:
+# In[ ]:
 
 
 model.fit(X, y, epochs=100, validation_split=0.33)
 
 
-# In[25]:
+# In[ ]:
 
 
-model.save('my_model.h5')
+
 
 
 # In[26]:
 
 
 temp = model.predict(inp_data, verbose=0)
-
-
-# In[26]:
-
-
-get_ipython().system('ls')
 
 
 # In[ ]:
