@@ -13,4 +13,4 @@ if __name__ == '__main__':
     
     
     save_dataset(dataset, filename)
-    print(f'Saved the dataset in {filename}.npy file\n')
+    print('Saved the dataset in {}.npy file\n'.format(filename))
