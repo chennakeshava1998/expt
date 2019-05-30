@@ -23,6 +23,7 @@ from keras import optimizers
 import datetime
 
 from etp import etp
+from keras import backend as K
 
 
 # In[2]:
@@ -60,19 +61,40 @@ X, y, phy_coordinates = data[0], data[1], data[2]
 # In[7]:
 
 
-def custom_loss(y_true, y_pred):
-    print('ETP: Matrix y_true shape: {}'.format(y_true.shape))
-    print('ETP: Matrix y_pred shape: {}'.format(y_pred.shape))
-    return etp.get_best_etp(y_true, y_pred)
+X.shape
 
 
 # In[8]:
 
 
-adam = optimizers.Adam(lr=1e-6)
+def custom_loss(y_true, y_pred):
+    print('ETP: Matrix y_true shape: {}'.format(y_true.shape))
+    print('ETP: Matrix y_pred shape: {}'.format(y_pred.shape))
+    
+
+    ans = etp.get_best_etp((y_true), y_pred[:, 0:y_true.shape[0], 0:2])
+    return ans
 
 
 # In[9]:
+
+
+def toy_loss(y_true, y_pred):
+    print('ETP: Matrix y_true shape: {}'.format(y_true.shape))
+    print('ETP: Matrix y_pred shape: {}'.format(y_pred.shape))
+    
+    for i in range(0, y_true.shape[0]):
+        print(i)
+    return tf.Variable(100, name='etp_loss', dtype=tf.float32)
+
+
+# In[10]:
+
+
+adam = optimizers.Adam(lr=1e-6)
+
+
+# In[11]:
 
 
 # create and fit the LSTM network
@@ -80,11 +102,14 @@ model = Sequential()
 model.add(LSTM(HIDDEN_SIZE, input_shape=(MAX_NODES, MAX_VC_DIM)))
 model.add(RepeatVector(MAX_NODES))
 model.add(LSTM(HIDDEN_SIZE, return_sequences=True))
-model.add(Dense(MAX_VC_DIM))
+model.add(Dense(MAX_NODES))
+
+
+# In[12]:
+
 
 model.compile(loss=custom_loss,
-              optimizer=adam,
-              metrics=['accuracy'])
+              optimizer=adam)
 model.summary()
 
 
