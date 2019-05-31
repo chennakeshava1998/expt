@@ -36,9 +36,10 @@ def get_shortest_path(source, dest, dist_matrix, VC_matrix, anchors):
         return VC_matrix[source][dest]
 
     # return 1 + min distance from source to a neighbour of destination
-    for i in range(0, dist_matrix.shape[0]):
-        if is_neighbour(anchors[dest], i, dist_matrix):
-            VC_matrix[source][dest] = min(VC_matrix[source][dest], 1 + VC_matrix[source][i])
+    for _ in range(0, dist_matrix.shape[0]):
+        for i in range(0, dist_matrix.shape[0]):
+            if is_neighbour(anchors[dest], i, dist_matrix):
+                VC_matrix[source][dest] = min(VC_matrix[source][dest], 1 + VC_matrix[source][i])
 
     # symmetric distances
     VC_matrix[dest][source] = VC_matrix[source][dest]
@@ -49,6 +50,8 @@ def get_shortest_path(source, dest, dist_matrix, VC_matrix, anchors):
 
 def calculate_shortest_hops(dist_matrix, anchors):
     VC_matrix = 1000 * np.ones((dist_matrix.shape[0], len(anchors)))
+
+    print('Length of anchor node array: {}'.format(len(anchors)))
 
     # print('DEBUG: dist_matrix {}'.format(dist_matrix.shape))
     # print('DEBUG: VC_matrix {}'.format(VC_matrix.shape))
