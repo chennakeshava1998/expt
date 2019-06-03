@@ -51,7 +51,7 @@ def get_shortest_path(source, dest, dist_matrix, VC_matrix, anchors):
 def calculate_shortest_hops(dist_matrix, anchors):
     VC_matrix = 1000 * np.ones((dist_matrix.shape[0], len(anchors)))
 
-    print('Length of anchor node array: {}'.format(len(anchors)))
+    # print('Length of anchor node array: {}'.format(len(anchors)))
 
     # print('DEBUG: dist_matrix {}'.format(dist_matrix.shape))
     # print('DEBUG: VC_matrix {}'.format(VC_matrix.shape))

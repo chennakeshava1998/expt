@@ -1,8 +1,9 @@
 import numpy as np
 import tensorflow as tf
+tf.enable_eager_execution()
 # A and B are two (N by 2) matrices
 def get_etp_without_rotation(A, B):
-        n = A.get_shape().as_list()
+        n = tf.convert_to_tensor(A.get_shape())
 
         print("Type of n : {}".format(type(n)))
 
@@ -11,18 +12,18 @@ def get_etp_without_rotation(A, B):
 
         
         count_invs = 0
-        # for i in range(0, n):
-        #         for j in range(0, n):
+        for i in range(0, n.numpy()):
+                for j in range(0, n):
 
-        #                 # check for inversions along X-axis
-        #                 count_invs += (A[i, 0]<A[j, 0] and B[j, 0]<B[i, 0])
-        #                 count_invs += (A[i, 0]>A[j, 0] and B[j, 0]>B[i, 0])
+                        # check for inversions along X-axis
+                        count_invs += (A[i, 0]<A[j, 0] and B[j, 0]<B[i, 0])
+                        count_invs += (A[i, 0]>A[j, 0] and B[j, 0]>B[i, 0])
 
-        #                 # check for inversions along Y-axis
-        #                 count_invs += (A[i, 1]<A[j, 1] and B[j, 1]<B[i, 1])
-        #                 count_invs += (A[i, 1]>A[j, 1] and B[j, 1]>B[i, 1])
+                        # check for inversions along Y-axis
+                        count_invs += (A[i, 1]<A[j, 1] and B[j, 1]<B[i, 1])
+                        count_invs += (A[i, 1]>A[j, 1] and B[j, 1]>B[i, 1])
 
-        # count_invs/=(n * (n - 1))
+        count_invs/=(n * (n - 1))
         count_invs *= 100
         return tf.constant(count_invs, dtype=tf.float32)
 

@@ -10,24 +10,23 @@ from TPM_from_VCS.util import calculate_virtual_coordinates as calc_VCS
 
 # returns the physical coordinates and virtual coordinates.
 def create_dataset(size):
+    # dataset variable must be initialised outside the for-loop. Otherwise, only 1 training-datapoint is prepared!
+    dataset = []
  
     for i in range(0, size):
+        temp = np.random.randint(low=3, high=100)
+        print('Number of nodes currently : {}'.format(temp))
 
-        phy_coordinates, vcs = calc_VCS.get_VC(np.random.randint(low=10, high=1000))
+        phy_coordinates, vcs = calc_VCS.get_VC(temp) # 20 sensor nodes in the network
 
-        # dataset = np.array(((vcs[0]), (phy_coordinates[0])), dtype=np.float32)
-
-        dataset = [(vcs[0], phy_coordinates[0])]
-        # dataset = np.array
-
-        for i in range(1, phy_coordinates.shape[0]):
+        for i in range(0, phy_coordinates.shape[0]):
             dataset.append(((vcs[i]), (phy_coordinates[i])))
+            # print('Size of dataset list : {}'.format(len(dataset)))
 
-
-        # dataset.append((vcs, phy_coordinates))
-        
         if i % 50 == 0:
             print('Created {} records in the dataset\n'.format(i))
+
+        
     
     return dataset
 
