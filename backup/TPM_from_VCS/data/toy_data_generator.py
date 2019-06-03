@@ -12,6 +12,8 @@ from TPM_from_VCS.util import calculate_virtual_coordinates as calc_VCS
 def create_dataset(size):
     # dataset variable must be initialised outside the for-loop. Otherwise, only 1 training-datapoint is prepared!
     dataset = []
+    
+    # for debug only:
  
     for i in range(0, size):
         temp = np.random.randint(low=3, high=100)
@@ -21,7 +23,7 @@ def create_dataset(size):
 
         for i in range(0, phy_coordinates.shape[0]):
             dataset.append(((vcs[i]), (phy_coordinates[i])))
-            # print('Size of dataset list : {}'.format(len(dataset)))
+
 
         if i % 50 == 0:
             print('Created {} records in the dataset\n'.format(i))
