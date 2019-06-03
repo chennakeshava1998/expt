@@ -85,14 +85,11 @@ def processed_all_nodes(VC_matrix, dist_matrix, anchors):
 
 
 def select_anchor_nodes(dist_matrix):
-    anchor_list = np.random.choice(range(20), 5, replace=False)
+    anchor_list = np.random.choice(range(dist_matrix.shape[0]), 5, replace=False)
 
-    print('Anchor List: {}'.format(anchor_list))
     return anchor_list
 
 def get_VC(num_of_nodes):
-    # print('get_VC: Need to create {} nodes'.format(num_of_nodes))
     dist_matrix = generate_physical_coordinates(num_of_nodes)
-    print('dist_matrix shape : {}'.format(dist_matrix))
     anchors = select_anchor_nodes(dist_matrix)
     return dist_matrix, calculate_shortest_hops(dist_matrix, anchors)
