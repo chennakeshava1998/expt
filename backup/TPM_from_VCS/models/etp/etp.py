@@ -3,46 +3,43 @@ import tensorflow as tf
 tf.enable_eager_execution()
 # A and B are two (N by 2) matrices
 def get_etp_without_rotation(A, B):
-        n = tf.convert_to_tensor(A.get_shape())
 
-        print("Type of n : {}".format(type(n)))
+        # print('DEBUG - get_etp_without_rotation: Shape Matrix-A : {}'.format(A.shape))
+        # print('DEBUG - get_etp_without_rotation: Shape Matrix-B : {}'.format(B.shape))
 
-        # n = n[0]
-        print('Values in n : {}'.format(n))
+        n = tf.convert_to_tensor(A.get_shape()[0])
 
-        
         count_invs = 0
-        for i in range(0, n.numpy()):
+        for i in range(0, n):
                 for j in range(0, n):
 
                         # check for inversions along X-axis
-                        count_invs += (A[i, 0]<A[j, 0] and B[j, 0]<B[i, 0])
-                        count_invs += (A[i, 0]>A[j, 0] and B[j, 0]>B[i, 0])
+                        count_invs += tf.cast((A[i, 0]<A[j, 0] and B[j, 0]<B[i, 0]), dtype=tf.int32)
+                        count_invs += tf.cast((A[i, 0]>A[j, 0] and B[j, 0]>B[i, 0]), dtype=tf.int32)
 
                         # check for inversions along Y-axis
-                        count_invs += (A[i, 1]<A[j, 1] and B[j, 1]<B[i, 1])
-                        count_invs += (A[i, 1]>A[j, 1] and B[j, 1]>B[i, 1])
+                        count_invs += tf.cast(A[i, 1]<A[j, 1] and B[j, 1]<B[i, 1], dtype=tf.int32)
+                        count_invs += tf.cast(A[i, 1]>A[j, 1] and B[j, 1]>B[i, 1], dtype=tf.int32)
 
         count_invs/=(n * (n - 1))
         count_invs *= 100
-        return tf.constant(count_invs, dtype=tf.float32)
+        return tf.constant(count_invs, dtype=tf.float64)
 
 # A is true value
 # B is predicted value
 def get_best_etp(A, B):
-        print('DEBUG: A Shape: {}'.format(A.shape))
-        print('DEBUG: B Shape: {}'.format(B.shape))
+        A = tf.reshape(A, shape=(-1, 2))
+        B = tf.reshape(B, shape=(-1, 2))
 
-        if A.shape != B.shape:
-                print('Something is wrong!!\n')
 
         x = 0
         final_etp = 100
         for x in range(0, 360):
                 rot_matrix = np.array([[np.cos(np.radians(x)), -np.sin(np.radians(x))], [np.sin(np.radians(x)), np.cos(np.radians(x))]])
-                rot_matrix = tf.convert_to_tensor(rot_matrix, dtype=tf.float32)
+                rot_matrix = tf.convert_to_tensor(rot_matrix, dtype=tf.float64)
+                # temp = get_etp_without_rotation(A, tf.matmul(B, tf.cast(rot_matrix, dtype=tf.float64)))
                 temp = get_etp_without_rotation(A, tf.matmul(B, rot_matrix))
-                # temp = get_etp_without_rotation(A, B)
+
                 final_etp = min(final_etp, temp)
 
                 if x % 60 == 0:
