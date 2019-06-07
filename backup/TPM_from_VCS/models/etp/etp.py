@@ -1,6 +1,6 @@
-import numpy as np
+        import numpy as np
 import tensorflow as tf
-tf.enable_eager_execution()
+# tf.enable_eager_execution()
 # A and B are two (N by 2) matrices
 def get_etp_without_rotation(A, B):
 
@@ -8,6 +8,8 @@ def get_etp_without_rotation(A, B):
         # print('DEBUG - get_etp_without_rotation: Shape Matrix-B : {}'.format(B.shape))
 
         n = tf.convert_to_tensor(A.get_shape()[0])
+
+        print(n)
 
         count_invs = 0
         for i in range(0, n):
@@ -42,8 +44,8 @@ def get_best_etp(A, B):
 
                 final_etp = min(final_etp, temp)
 
-                if x % 60 == 0:
-                        print('Current best of count_invs = {} at Angle {}'.format(final_etp, x))
+                # if x % 60 == 0:
+                        # print('Current best of count_invs = {} at Angle {}'.format(final_etp, x))
 
                 
-        return tf.constant(final_etp, dtype=tf.float32)
+        return tf.constant(final_etp, dtype=tf.float64)

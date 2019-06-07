@@ -52,7 +52,7 @@ def calculate_shortest_hops(dist_matrix, anchors):
                     if is_neighbour(source, i, dist_matrix):
                         VC_matrix[source][dest] = min(VC_matrix[source][dest], 1 + VC_matrix[i][dest])
 
-    print('Completed VC processing')
+    # print('Completed VC processing')
     return VC_matrix
 
 def baked_rice(VC_matrix, dist_matrix, anchors):

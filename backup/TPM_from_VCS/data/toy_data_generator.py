@@ -16,8 +16,8 @@ def create_dataset(size):
     # for debug only:
  
     for i in range(0, size):
-        temp = np.random.randint(low=3, high=100)
-        print('Number of nodes currently : {}'.format(temp))
+        temp = np.random.randint(low=6, high=100)
+        # print('Number of nodes currently : {}'.format(temp))
 
         phy_coordinates, vcs = calc_VCS.get_VC(temp) # 20 sensor nodes in the network
 
@@ -25,8 +25,8 @@ def create_dataset(size):
             dataset.append(((vcs[i]), (phy_coordinates[i])))
 
 
-        if i % 50 == 0:
-            print('Created {} records in the dataset\n'.format(i))
+        # if i % 50 == 0:
+            # print('Created {} records in the dataset\n'.format(i))
 
         
     
