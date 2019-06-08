@@ -12,7 +12,7 @@ from TPM_from_VCS.util import calculate_virtual_coordinates as calc_VCS
 def create_dataset(size):
     # dataset variable must be initialised outside the for-loop. Otherwise, only 1 training-datapoint is prepared!
     dataset = []
-    
+        
     # for debug only:
  
     for i in range(0, size):
