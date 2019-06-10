@@ -81,12 +81,12 @@ training_outputs = a[0][1]
 with tf.Session() as sess:
     init_op = tf.initialize_all_variables()
     loss_history = []
-    for j in range(2):
+    for j in range(100):
         for i in range(1):
           grads = temp_grad(model, training_inputs, training_outputs)
           optimizer.apply_gradients(zip(grads, [model.W, model.B]),
                                     global_step=tf.train.get_or_create_global_step())
-          if i % 2 == 0:
+          if j % 2 == 0:
             print("Loss at step {}: {}".format(i, loss(model, training_inputs, training_outputs)))
 
           loss_history.append(loss(model, training_inputs, training_outputs))
