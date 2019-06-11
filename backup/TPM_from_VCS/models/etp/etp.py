@@ -58,7 +58,7 @@ def get_best_etp(A, B):
         final_etp = 100
         for x in range(0, 360):
                 rot_matrix = np.array([[np.cos(np.radians(x)), -np.sin(np.radians(x))], [np.sin(np.radians(x)), np.cos(np.radians(x))]])
-                rot_matrix = tf.convert_to_tensor(rot_matrix, dtype=tf.float64)
+                rot_matrix = tf.convert_to_tensor(rot_matrix, dtype=tf.float32)
                 # temp = get_etp_without_rotation(A, tf.matmul(B, tf.cast(rot_matrix, dtype=tf.float64)))
                 temp = get_etp_without_rotation(A, tf.matmul(B, rot_matrix))
 
