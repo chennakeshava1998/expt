@@ -21,11 +21,16 @@ def get_etp_without_rotation(A, B):
 
         # print('DEBUG - get_etp_without_rotation: Shape Matrix-A : {} {}'.format(A.shape[0], A.shape[1]))
         # print('DEBUG - get_etp_without_rotation: Shape Matrix-B : {}'.format(B.shape))
+        A = tf.reshape(A, (-1, 2))
 
-        n = A.shape[0]
+        n = A.get_shape().as_list()[0]
+        print(type(n))
+        print(n)
 
 
         count_invs = 0
+
+
         for i in range(0, n):
                 for j in range(0, n):
 
@@ -37,11 +42,6 @@ def get_etp_without_rotation(A, B):
                         count_invs = tf.cond(A[i, 1] < A[j, 1], lambda: func1(B[j, 1], B[i, 1], count_invs), lambda: dummy_func())
                         count_invs = tf.cond(A[i, 1] > A[j, 1], lambda: func2(B[j, 1], B[i, 1], count_invs), lambda: dummy_func())
 
-                        # print('i = {} and j = {}'.format(i, j))
-                        
-                        
-                        
-                        
 
         count_invs/=(n * (n - 1))
         count_invs *= 100
