@@ -1,19 +1,23 @@
+# Input: Number of Nodes in a network
+# Output: Generates Virtual Coordinates using Hopcounts as a metric
 
 import numpy as np
 
+# generates 2D layout of a random graph
 def generate_physical_coordinates(n):
     phy_coord = np.random.randn(n, 2)
     return phy_coord
 
-# function ge_VC will be called by external modules to calculate VC
+# function get_VC will be called by external modules to calculate VC
 def distance(x, y, dist_matrix):
     return np.sqrt((dist_matrix[x, 0] - dist_matrix[y, 0])**2 + (dist_matrix[x, 1] - dist_matrix[y, 1])**2) 
-    
+
+# utility function to determine if two sensors are neighbours.
 def is_neighbour(x, y, dist_matrix):
     return distance(x, y, dist_matrix) <= 1
 
 
-# finding shortest paths based on Dynamic Programming
+# finding shortest paths based on Dynamic Programming/Bellman Ford Algorithm
 def get_shortest_path(source, dest, dist_matrix, VC_matrix):
 
     # return 1 + min distance from source to a neighbour of destination
@@ -55,19 +59,7 @@ def calculate_shortest_hops(dist_matrix, anchors):
     # print('Completed VC processing')
     return VC_matrix
 
-def baked_rice(VC_matrix, dist_matrix, anchors):
-    for source in range(0, dist_matrix.shape[0]):
-            for dest in range(0, len(anchors)):
-                if VC_matrix[source][dest] == 1000:
-                    for i in range(dist_matrix.shape[0]):
-                        if is_neighbour(source, i, dist_matrix):
-
-                            if VC_matrix[source][dest] > 1 + VC_matrix[i][dest]:
-                                VC_matrix[source][dest] = 1 + VC_matrix[i][dest]
-                                return 0
-
-    return 1
-
+# final function to verify if all the nodes have been processed completely
 def processed_all_nodes(VC_matrix, dist_matrix, anchors):
     ''' Function to verify if processing is complete '''
 
@@ -83,12 +75,13 @@ def processed_all_nodes(VC_matrix, dist_matrix, anchors):
     return 1
 
 
-
+# randomly select certain unique anchor nodes.
 def select_anchor_nodes(dist_matrix):
     anchor_list = np.random.choice(range(dist_matrix.shape[0]), 5, replace=False)
 
     return anchor_list
 
+# parent funtion that returns the physical and virtual coordinates, given the number of nodes in a network.
 def get_VC(num_of_nodes):
     dist_matrix = generate_physical_coordinates(num_of_nodes)
     anchors = select_anchor_nodes(dist_matrix)
